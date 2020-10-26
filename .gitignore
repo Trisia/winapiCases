@@ -1,0 +1,14 @@
+# Dependencies
+/.deps
+
+# Build Output
+/x86
+/amd64
+
+# Misc
+*.swp
+*.bak
+*.syso
+.idea
+*.ico
+*.exe
