@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/kardianos/service"
+	"golang.zx2c4.com/wireguard/tun"
 	"log"
 	"os"
 	"time"
 )
 
 var logger service.Logger
+var device tun.Device
 
 type program struct {
 	sig chan bool
@@ -21,14 +23,21 @@ func (p *program) Start(s service.Service) error {
 
 func (p *program) Stop(s service.Service) error {
 	p.sig <- true
+	if device != nil {
+		name, _ := device.Name()
+		log.Printf("删除 [%s] wintun 设备", name)
+		device.Close()
+	}
 	return nil
 }
 func (p *program) run() {
 	cnt := 0
 	log.Println("测试程序启动")
-
-	tunInterfaceCreate()
-
+	var err error
+	device, err = tunInterfaceCreate()
+	if err != nil {
+		log.Fatal(err)
+	}
 	tick := time.Tick(3 * time.Second)
 	for {
 		select {
