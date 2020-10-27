@@ -6,7 +6,6 @@ import (
 	"golang.zx2c4.com/wireguard/tun"
 	"log"
 	"os"
-	"time"
 )
 
 var logger service.Logger
@@ -31,7 +30,6 @@ func (p *program) Stop(s service.Service) error {
 	return nil
 }
 func (p *program) run() {
-	cnt := 0
 	log.Println("测试程序启动")
 	var err error
 	log.Printf("创建 网络适配器")
@@ -44,14 +42,18 @@ func (p *program) run() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	tick := time.Tick(3 * time.Second)
+	log.Println("启动 TUN读取goroutine")
+	//cnt := 0
+	//tick := time.Tick(3 * time.Second)
+	// 读取
+	go readFromTUNLog(device)
 	for {
 		select {
 		case <-p.sig:
 			break
-		case <-tick:
-			cnt++
-			log.Println("status: Alive")
+			//case <-tick:
+			//	cnt++
+			//	log.Println("status: Alive")
 		}
 	}
 }

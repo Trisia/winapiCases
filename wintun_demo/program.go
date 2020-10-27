@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"golang.org/x/net/ipv4"
+	"golang.org/x/net/ipv6"
+	device2 "golang.zx2c4.com/wireguard/device"
 	"golang.zx2c4.com/wireguard/tun"
 	"golang.zx2c4.com/wireguard/windows/tunnel/winipcfg"
 	"log"
@@ -34,15 +37,53 @@ func setInterfaceCfg(device tun.Device) error {
 	if err != nil {
 		return err
 	}
-	targetHostIp, targetIpNet, _ := net.ParseCIDR("172.31.214.12/32")
-	targetIpNet.IP = targetHostIp
+	//targetHostIp, targetIpNet, _ := net.ParseCIDR("172.31.214.12/32")
+	//targetIpNet.IP = targetHostIp
 
 	err = luid.SetRoutes([]*winipcfg.RouteData{
 		{*ipNet, ipNet.IP, 0},
-		{*targetIpNet, ip, 0},
+		//{*targetIpNet, ip, 0},
 	})
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+// 从TUN设备中读取数据并打印日志
+func readFromTUNLog(dev tun.Device) {
+	for {
+		buffer := make([]byte, 65535)
+		n, err := dev.Read(buffer[:], 0)
+		if err != nil {
+			log.Println("Failed to read packet from TUN device:", err)
+			return
+		}
+		pkg := buffer[0:n]
+		if n == 0 || n > device2.MaxContentSize {
+			return
+		}
+		switch pkg[0] >> 4 {
+		case ipv4.Version:
+			if len(pkg) < ipv4.HeaderLen {
+				return
+			}
+			h, err := ipv4.ParseHeader(pkg)
+			if err != nil {
+				log.Println("Error parse ipv4 header:", err)
+				return
+			}
+			log.Printf(">> Protocol [0x%02X] src: %s, dst: %s", h.Protocol, h.Src.String(), h.Dst.String())
+		case ipv6.Version:
+			if len(pkg) < ipv6.HeaderLen {
+				return
+			}
+			h, err := ipv4.ParseHeader(pkg)
+			if err != nil {
+				log.Println("Error parse ipv4 header:", err)
+				return
+			}
+			log.Printf(">> Protocol [0x%02X] src: %s, dst: %s", h.Protocol, h.Src.String(), h.Dst.String())
+		}
+	}
 }
