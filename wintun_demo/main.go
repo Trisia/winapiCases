@@ -34,7 +34,13 @@ func (p *program) run() {
 	cnt := 0
 	log.Println("测试程序启动")
 	var err error
+	log.Printf("创建 网络适配器")
 	device, err = tunInterfaceCreate()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("配置IP 路由")
+	err = setInterfaceCfg(device)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -52,7 +58,7 @@ func (p *program) run() {
 
 func main() {
 
-	logf, err := os.OpenFile("D:\\wintun.log", os.O_CREATE|os.O_APPEND|os.O_RDWR, 755)
+	logf, err := os.OpenFile("C:\\wintun.log", os.O_CREATE|os.O_APPEND|os.O_RDWR, 755)
 	if err != nil {
 		log.Fatal(err)
 	}
