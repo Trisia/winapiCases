@@ -60,11 +60,11 @@ func (p *program) run() {
 
 func main() {
 
-	logf, err := os.OpenFile("C:\\wintun.log", os.O_CREATE|os.O_APPEND|os.O_RDWR, 755)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.SetOutput(logf)
+	//logf, err := os.OpenFile("C:\\wintun.log", os.O_CREATE|os.O_APPEND|os.O_RDWR, 755)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//log.SetOutput(logf)
 
 	log.Println("Boot Args:", os.Args)
 
