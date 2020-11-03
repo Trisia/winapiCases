@@ -12,13 +12,13 @@ func main() {
 		panic(err)
 	}
 	defer m.Disconnect()
-	svcName := "TestLoopLogService"
+	svcName := "TestTunCases"
 
 	svc, err := m.OpenService(svcName)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer svc.Close()
+	_ = svc.Close()
 
 	err = svc.Delete()
 	if err != nil {
