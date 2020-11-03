@@ -11,6 +11,7 @@ require (
 	github.com/kardianos/service v1.1.0
 	github.com/lxn/walk v0.0.0-20200924155701-77185e9c4aec
 	github.com/lxn/win v0.0.0-20191128105842-2da648fda5b4
+	github.com/mitchellh/go-ps v1.0.0
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/ugorji/go v1.1.13 // indirect

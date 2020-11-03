@@ -27,6 +27,7 @@ func (p *program) Stop(s service.Service) error {
 		log.Printf("删除 [%s] wintun 设备", name)
 		device.Close()
 	}
+	s.Uninstall()
 	return nil
 }
 func (p *program) run() {
