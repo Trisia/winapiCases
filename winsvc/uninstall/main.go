@@ -12,7 +12,7 @@ func main() {
 		panic(err)
 	}
 	defer m.Disconnect()
-	svcName := "TestTunCases"
+	svcName := "CrossTunnelCore"
 
 	svc, err := m.OpenService(svcName)
 	if err != nil {
