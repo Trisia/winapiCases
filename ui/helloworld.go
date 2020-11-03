@@ -27,7 +27,7 @@ func main() {
 	button.SetText("CLOSE")
 	button.Clicked().Attach(func() {
 		button.SetEnabled(false)
-		mw.Close()
+		walk.App().Exit(0)
 	})
 
 	mw.Closing().Attach(func(canceled *bool, reason walk.CloseReason) {

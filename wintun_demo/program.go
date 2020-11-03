@@ -41,7 +41,7 @@ func setInterfaceCfg(device tun.Device) error {
 	//targetIpNet.IP = targetHostIp
 
 	err = luid.SetRoutes([]*winipcfg.RouteData{
-		{*ipNet, ipNet.IP, 0},
+		{*ipNet, net.ParseIP("10.0.0.1"), 0},
 		//{*targetIpNet, ip, 0},
 	})
 	if err != nil {
