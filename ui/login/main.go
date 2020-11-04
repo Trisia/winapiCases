@@ -15,6 +15,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	mw.Starting().Attach(func() {
+		fmt.Println("Starting")
+	})
 	// 隐藏 最小化和最大化按钮
 	win.SetWindowLong(mw.Handle(), win.GWL_STYLE,
 		win.GetWindowLong(mw.Handle(), win.GWL_STYLE) & ^win.WS_MINIMIZEBOX & ^win.WS_MAXIMIZEBOX)
@@ -33,22 +36,18 @@ func main() {
 	mw.SetY((int(win.GetSystemMetrics(1)) - mw.Height()) / 2)
 	mw.Show()
 
-	//title, _ := walk.NewLabel(mw)
-	//title.SetText("配置连接地址")
-	//title.SetAlignment(walk.AlignHCenterVCenter)
-	//f, err := walk.NewFont(
-	//	"Simsum",
-	//	50,
-	//	0,
-	//)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//title.SetFont(f)
+	title, _ := walk.NewLabel(mw)
+	title.SetText("配置连接地址")
+	title.SetAlignment(walk.AlignHCenterVCenter)
+	f, _ := walk.NewFont("Simsum", 40, 0)
+	title.SetFont(f)
+	title.SetFocus()
 
 	ctn1, err := walk.NewComposite(mw)
-	ctn1.SetLayout(walk.NewHBoxLayout())
-
+	boxLayout := walk.NewHBoxLayout()
+	boxLayout.SetMargins(walk.Margins{0, 0, 0, 0})
+	ctn1.SetLayout(boxLayout)
+	//fmt.Printf("%+v\n",ctn1)
 	edit, err := walk.NewLineEdit(ctn1)
 	if err != nil {
 		panic(err)
@@ -56,12 +55,21 @@ func main() {
 	edit.SetToolTipText("格式为 https://ip:port")
 	// 设置placeholder
 	edit.SetCueBanner("请输入服务器地址")
-
+	edit.KeyDown().Attach(func(key walk.Key) {
+		if key == walk.KeyReturn {
+			// TODO
+		}
+	})
 	btn, err := walk.NewPushButton(ctn1)
 	if err != nil {
 		panic(err)
 	}
 	btn.SetText("确定")
+
+	minSizeF, _ := walk.NewFont("Simsum", 9, 0)
+	infoText, _ := walk.NewLabel(mw)
+	infoText.SetFont(minSizeF)
+	infoText.SetText("等一下")
 
 	progressBar, _ := walk.NewProgressBar(mw)
 	// 设置进度条样式为无限滚动
@@ -72,15 +80,7 @@ func main() {
 		progressBar.SetVisible(true)
 		ctn1.SetVisible(false)
 	})
-
-	edit.EditingFinished().Attach(func() {
-		// pare Enter
-		fmt.Println("End")
-	})
-	//mw.Activating().Attach(func() {
-	//	// 窗口聚焦
-	//	fmt.Println("激活")
-	//})
+	_, _ = walk.NewLineEdit(mw)
 
 	mw.Run()
 }

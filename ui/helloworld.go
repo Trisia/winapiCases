@@ -12,8 +12,9 @@ func main() {
 	mw, _ := walk.NewMainWindow()
 
 	mw.SetTitle("Hello")
-	mw.SetWidth(600)
-	mw.SetHeight(400)
+	mw.SetSize(walk.Size{400, 200})
+	//mw.SetWidth(600)
+	//mw.SetHeight(400)
 	mw.SetLayout(walk.NewVBoxLayout())
 
 	mw.SetX((int(win.GetSystemMetrics(0)) - mw.Width()) / 2)
@@ -33,6 +34,17 @@ func main() {
 	mw.Closing().Attach(func(canceled *bool, reason walk.CloseReason) {
 		fmt.Println("I am accepted Exist instruct（wait 5 second）", *canceled, reason)
 	})
+
+	dialog, _ := walk.NewDialogWithFixedSize(mw)
+	dialog.SetLayout(walk.NewFlowLayout())
+	dialog.SetClientSize(walk.Size{200, 200})
+
+	btn2, _ := walk.NewPushButton(mw)
+	btn2.SetText("CCCC")
+	btn2.Clicked().Attach(func() {
+		dialog.Run()
+	})
+
 	code := mw.Run()
 	fmt.Println("Exist Code:", code)
 	//go func() {
